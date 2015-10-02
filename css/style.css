@@ -1,3 +1,25 @@
 body {
     text-align: center;
 }
+
+#scoreboard {
+	font-family: 'Permanent Marker', 'Segoe UI', verdana;
+	display: table;
+	width: 505px;
+	height: 50px;
+	border: solid 1px #ddd;
+	margin: 0 auto -40px;
+	color: white;
+	background: url(../images/chalkboard.jpg)
+}
+
+#scoreboard > div { 
+	display: table-cell;
+	padding: 8px 10px;
+    font-size: 1.3em; 
+}
+
+.lives { text-align: left; width: 40%; }
+.lives * { display: inline-block; vertical-align: middle; }
+.score { text-align: right; width: 40%; }
+.score span { color: #fad48b; }

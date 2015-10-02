@@ -23,7 +23,8 @@ var Engine = (function(global) {
         win = global.window,
         canvas = doc.createElement('canvas'),
         ctx = canvas.getContext('2d'),
-        lastTime;
+        lastTime,
+        animationFrameID;
 
     canvas.width = 505;
     canvas.height = 606;
@@ -153,6 +154,8 @@ var Engine = (function(global) {
         });
 
         player.render();
+
+        if(gem) gem.render();
     }
 
     /* This function does nothing but it could have been a good place to
@@ -172,7 +175,10 @@ var Engine = (function(global) {
         'images/water-block.png',
         'images/grass-block.png',
         'images/enemy-bug.png',
-        'images/char-boy.png'
+        'images/char-boy.png',
+        'images/gem-orange.png',
+        'images/gem-green.png',
+        'images/gem-blue.png'
     ]);
     Resources.onReady(init);
 
