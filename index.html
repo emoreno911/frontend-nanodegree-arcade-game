@@ -4,10 +4,43 @@
     <meta charset="UTF-8">
     <title>Effective JavaScript: Frogger</title>
     <link href='https://fonts.googleapis.com/css?family=Permanent+Marker' rel='stylesheet' type='text/css'>
+    <link href="https://bootswatch.com/paper/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 	<div id="scoreboard"></div>
+
+
+	<!-- Modal -->
+    <div class="modal fade" id="gameModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="myModalLabel">¯\_(ツ)_/¯ Game Over</h5>
+          </div>
+          <div class="modal-body">
+            <h5>Top Scores</h5>
+            <table class="table table-striped">
+            	<thead>
+            		<tr>
+			          <th>#</th>
+			          <th>Name</th>
+			          <th>Score</th>
+			        </tr>
+            	</thead>
+            	<tbody></tbody>      
+    		</table>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-success" id="btnNewGame">New Game</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+
     <script src="js/resources.js"></script>
     <script src="js/app.js"></script>
     <script src="js/engine.js"></script>

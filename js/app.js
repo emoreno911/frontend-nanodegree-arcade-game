@@ -99,8 +99,10 @@ Player.prototype.update = function(dt) {
         var scoreIncrement = 100; // Increment when reach blue blocks        
 
         // check for gem extra points
-        if(isPointBetween(player.x, gem.x - 20, gem.x + 20)) {
-            scoreIncrement += gem.value;
+        if(gem) {
+            if(isPointBetween(player.x, gem.x - 20, gem.x + 20)) {
+                scoreIncrement += gem.value;
+            }
         }
 
         game.updateScore(scoreIncrement);
@@ -151,7 +153,8 @@ Gem.prototype.render = function() {
 
 // Game handle
 var INIT_LIVES = 3,
-    LEVEL_MAX_TIME = 30;
+    LEVEL_MAX_TIME = 0, // not used yet
+    isGameOver;         // can player make a move???
 
 var Game = function() {
     this.score = 0;
@@ -184,6 +187,7 @@ Game.prototype.updateLives = function(increment) {
 
     if(this.lives < 1) {
         console.log('You Lose');
+        gameOver();
         this.lives = 0;
     }
 
@@ -209,6 +213,46 @@ function getRandomInt(min, max) {
   return Math.floor(Math.random() * (max - min)) + min;
 }
 
+var $gameModal = $('#gameModal'),
+    topScores;
+
+function gameOver() {
+    isGameOver = true;
+
+    var strTopScores = localStorage.getItem('topScores') || "[]",
+        playerScore = { name: "#ME#", score: game.score };
+
+    topScores = JSON.parse(strTopScores);
+    topScores.push(playerScore);
+    topScores.sort(function (a, b) {
+        if (a.score > b.score) {
+            return -1;
+        }
+        if (a.score < b.score) {
+            return 1;
+        }
+
+        return 0;
+    });
+
+    var ohtml = topScores.map(function(el, i) {
+        var input = ['<input type="text" class="form-control" placeholder="Type your name here">'],
+            name = el.name.replace('#ME#', input.join(''));
+
+        return ['<tr data-index="', i, '">',
+                    '<th scope="row">',i+1,'</th>',
+                    '<td>',name,'</td>',
+                    '<td>',el.score,'</td>',
+                '</tr>'].join('');
+    });
+
+    // Theres always one row to show, so comment the line bellow
+    // if(ohtml.length == 0) ohtml = ['<tr><td colspan="3">Top scores not found<td></tr>'];
+
+    $gameModal.find('table tbody').html(ohtml.join(''));
+    $gameModal.modal('show');
+}
+
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
@@ -218,6 +262,7 @@ function gameStart() {
     game = new Game();
     allEnemies = [new Enemy(), new Enemy(null,null,GAME_ROWS[2], 80), new Enemy(null,null,GAME_ROWS[3], 160)];
     player = new Player();
+    isGameOver = false;
 
     if(gemInterval) clearInterval(gemInterval);
 
@@ -239,8 +284,24 @@ document.addEventListener('keyup', function(e) {
         40: 'down'
     };
 
-    player.handleInput(allowedKeys[e.keyCode]);
+    if(!isGameOver)
+        player.handleInput(allowedKeys[e.keyCode]);
 });
 
+document.getElementById('btnNewGame').onclick = function(e) {
+    var $input = $gameModal.find('input'),
+        index = $input.closest('tr').data('index');
+
+    topScores[index].name = $input.val() || "Juan Doe";
+    
+    // We only save 5 top scores
+    if(topScores.length > 5) 
+        topScores.pop();
+    
+    localStorage.setItem('topScores', JSON.stringify(topScores));
+
+    gameStart();
+    $gameModal.modal('hide');
+}
 
 gameStart();

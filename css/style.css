@@ -23,3 +23,10 @@ body {
 .lives * { display: inline-block; vertical-align: middle; }
 .score { text-align: right; width: 40%; }
 .score span { color: #fad48b; }
+
+.table th { text-align: center; }
+.table tr td { width: 40%; }
+.table tr td:first-child { width: 20%; }
+.table td input { text-align: center; }
+#gameModal .modal-header h5 { text-align: left; }
+#gameModal .modal-body h5 { margin-top: 0; }
