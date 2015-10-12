@@ -23,7 +23,7 @@ Enemy.prototype.update = function(dt) {
     if(this.x > 500)
         this.x = 0;
 
-    // theres collition
+    /// here we detect any collision
     if(isPointBetween(player.x, this.x - 50, this.x + 50) && isPointBetween(player.y, this.y - 40, this.y + 40)) {
         player.reset();
         game.updateLives(false);
@@ -31,6 +31,7 @@ Enemy.prototype.update = function(dt) {
         
 };
 
+/// Update the enemy's speed
 Enemy.prototype.updateSpeed = function(isDecrement) {
     var increment = getRandomInt(10,35);
 
@@ -85,20 +86,18 @@ Player.prototype.handleInput = function(key) {
         break;
 
         default:
-        // do nothing
+        /// do nothing
     }
 
-    //console.log('player to: ' + x + ', ' + y);
-    //console.log('player in: ' + this.x + ', ' + this.y);
     this.render();
 }
 
 Player.prototype.update = function(dt) {
-    // last block pixels
+    /// if the player cross the entire road
     if(this.y < GAME_ROWS[1]) {
-        var scoreIncrement = 100; // Increment when reach blue blocks        
+        var scoreIncrement = 100; /// set Increment when reach blue blocks        
 
-        // check for gem extra points
+        /// check for gem extra points
         if(gem) {
             if(isPointBetween(player.x, gem.x - 20, gem.x + 20)) {
                 scoreIncrement += gem.value;
@@ -107,17 +106,16 @@ Player.prototype.update = function(dt) {
 
         game.updateScore(scoreIncrement);
 
-        // more speed to enemies
+        /// then add more speed to enemies
         allEnemies.forEach(function(enemy) {
             enemy.updateSpeed();
-            //console.log(enemy.speed);
         });
 
         this.reset();
     }
 };
 
-// Reubica al jugador en una posicion inicial
+/// set the player at initial position
 Player.prototype.reset = function() {
     this.x = getRandomInt(0,4) * 100;
     this.y = 400 - (getRandomInt(0,2) * 80);
@@ -142,6 +140,7 @@ var Gem = function(type) {
             break;
     }
 
+    /// our gems appear at random columns
     this.x = getRandomInt(0,5) * 100;
     this.y = GAME_ROWS[0];
 };
@@ -151,10 +150,10 @@ Gem.prototype.render = function() {
 }
 
 
-// Game handle
+/// Game handle
 var INIT_LIVES = 3,
-    LEVEL_MAX_TIME = 0, // not used yet
-    isGameOver;         // can player make a move???
+    LEVEL_MAX_TIME = 0, /// not used yet
+    isGameOver;         /// can the player make a move???
 
 var Game = function() {
     this.score = 0;
@@ -200,7 +199,6 @@ Game.prototype.updateScore = function(points) {
 }
 
 
-
 // Returns true if point is between min and max
 function isPointBetween(point, min, max) {
     if(point > min && point < max)
@@ -217,8 +215,9 @@ var $gameModal = $('#gameModal'),
     topScores;
 
 function gameOver() {
-    isGameOver = true;
+    isGameOver = true;  /// no more moves
 
+    /// look for our leaderboard register on localStorage
     var strTopScores = localStorage.getItem('topScores') || "[]",
         playerScore = { name: "#ME#", score: game.score };
 
@@ -235,6 +234,7 @@ function gameOver() {
         return 0;
     });
 
+    /// build the HTML for top scores's table
     var ohtml = topScores.map(function(el, i) {
         var input = ['<input type="text" class="form-control" placeholder="Type your name here">'],
             name = el.name.replace('#ME#', input.join(''));
@@ -246,7 +246,7 @@ function gameOver() {
                 '</tr>'].join('');
     });
 
-    // Theres always one row to show, so comment the line bellow
+    /// Theres always one row to show, so comment the line bellow
     // if(ohtml.length == 0) ohtml = ['<tr><td colspan="3">Top scores not found<td></tr>'];
 
     $gameModal.find('table tbody').html(ohtml.join(''));
@@ -258,6 +258,7 @@ function gameOver() {
 // Place the player object in a variable called player
 var game, allEnemies, player, gem, gemInterval;
 
+/// here we start a new game
 function gameStart() {
     game = new Game();
     allEnemies = [new Enemy(), new Enemy(null,null,GAME_ROWS[2], 80), new Enemy(null,null,GAME_ROWS[3], 160)];
